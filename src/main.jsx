@@ -266,11 +266,11 @@ function App() {
       <div className="brand"><div className="brand-mark">K</div><div><strong>kyvo</strong><span>COLLECTOR</span></div></div>
       <div className="workspace-label">WORKSPACE</div>
       <nav className="nav-list">
-        {[['Overview','⌂'],['Queue','⌁'],['Schedule','＋'],['Follow-ups','◷'],['Notifications','♢'],['Performance','↗']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label ? 'selected' : ''}`} onClick={() => setActive(label)}><span className="nav-icon">{icon}</span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
+        {[['Overview','home'],['Queue','queue'],['Schedule','schedule'],['Follow-ups','schedule'],['Notifications','notifications'],['Performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label ? 'selected' : ''}`} onClick={() => setActive(label)}><span className="nav-icon"><Icon name={icon} /></span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
       </nav>
-      <button className={`nav-item request-nav ${active === (isSupervisor ? 'Approvals' : 'Requests') ? 'selected' : ''}`} onClick={() => setActive(isSupervisor ? 'Approvals' : 'Requests')}><span className="nav-icon">↗</span>{isSupervisor ? 'Approvals' : 'Requests'}</button>
+      <button className={`nav-item request-nav ${active === (isSupervisor ? 'Approvals' : 'Requests') ? 'selected' : ''}`} onClick={() => setActive(isSupervisor ? 'Approvals' : 'Requests')}><span className="nav-icon"><Icon name="queue" /></span>{isSupervisor ? 'Approvals' : 'Requests'}</button>
       <div className="workspace-label team-label">SUPERVISOR</div>
-      {isSupervisor && <button className={`nav-item ${active === 'Team' ? 'selected' : ''}`} onClick={() => setActive('Team')}><span className="nav-icon">◎</span>Team</button>}
+      {isSupervisor && <button className={`nav-item ${active === 'Team' ? 'selected' : ''}`} onClick={() => setActive('Team')}><span className="nav-icon"><Icon name="team" /></span>Team</button>}
       <div className="sidebar-bottom"><button className="user-card" onClick={() => setActive('Profile')}><div className="avatar avatar-sm">{session.initials}</div><div className="user-meta"><strong>{session.name}</strong><span>{session.role}</span></div><span className="more">•••</span></button><button className="settings-link" onClick={() => setActive('Profile')}>⚙&nbsp; Profile & settings</button><button className="settings-link" onClick={() => { localStorage.removeItem('kyvo-session'); setSession(null) }}>↪&nbsp; Sign out</button></div>
     </aside>
     <main className="main-content">
