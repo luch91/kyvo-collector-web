@@ -50,6 +50,7 @@
 .nav-icon:before{display:none!important}.nav-icon .svg-icon{display:block;width:18px;height:18px;stroke:currentColor}.nav-item.selected .nav-icon .svg-icon{stroke:#9eb4ff}.request-nav .nav-icon .svg-icon{display:block}
 .notification-button{position:relative;display:grid;place-items:center;width:34px;height:34px;padding:0;border:0;background:transparent;color:#667085;cursor:pointer}.notification-button:hover{color:#203ac3;background:#eef1ff;border-radius:8px}.notification-button .svg-icon{width:18px;height:18px;display:block}.role-choice-icon{display:grid;place-items:center}.role-choice-icon .svg-icon{width:18px;height:18px;display:block}
 .workspace-name{color:#667085;font-weight:600}.workspace-role{display:inline-flex;align-items:center;margin-left:10px;padding:4px 8px;border:1px solid #dce2ff;border-radius:999px;background:#f4f6ff;color:#3156c5;font-size:10px;font-weight:700;letter-spacing:.2px}
+.supervisor-space-item:disabled{opacity:.52;cursor:not-allowed;background:transparent;color:#98a2b3}.supervisor-space-item:disabled .nav-icon{color:#98a2b3}.nav-lock{margin-left:auto;font-size:9px;letter-spacing:.2px;color:#98a2b3}
 @media(max-width:760px){.workspace-name{display:none}.workspace-role{margin-left:6px;padding:3px 6px;font-size:9px}.breadcrumb{display:flex;align-items:center;min-width:0}.breadcrumb strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.breadcrumb>span:not(.workspace-role):not(.mobile-menu-button){flex:none}}
 .mobile-menu-button,.mobile-sidebar-backdrop{display:none}
 @media(max-width:760px){
