@@ -279,13 +279,13 @@ function App() {
   return <div className={`app-shell ${isSupervisor ? 'supervisor-mode' : ''} route-${active.toLowerCase().replace(/[^a-z]+/g, '-')} ${mobileSidebarOpen ? 'mobile-sidebar-open' : ''}`}>
     <button className="mobile-sidebar-backdrop" aria-label="Close navigation" onClick={() => setMobileSidebarOpen(false)} />
     <aside className="sidebar">
-      <div className="brand"><div className="brand-mark">K</div><div><strong>kyvo</strong><span>COLLECTOR</span></div></div>
-      <div className="sidebar-section-label">COLLECTOR</div>
+      <div className="brand"><div className="brand-mark">K</div><div><strong>kyvo</strong><span>WORKSPACE</span></div></div>
+      <div className="sidebar-section-label">MY WORK</div>
       <nav className="nav-list collector-nav">
         {[['Overview','home'],['Queue','queue'],['Schedule','schedule'],['Follow-ups','schedule'],['Notifications','notifications'],['Performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label && !isSupervisor ? 'selected' : ''}`} onClick={() => navigateTo(label)}><span className="nav-icon"><Icon name={icon} /></span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
         <button className={`nav-item request-nav ${active === 'Requests' && !isSupervisor ? 'selected' : ''}`} onClick={() => navigateTo('Requests')}><span className="nav-icon"><Icon name="inbox" /></span>Requests</button>
       </nav>
-      <div className="sidebar-section-label supervisor-section-label">SUPERVISOR</div>
+      <div className="sidebar-section-label supervisor-section-label">TEAM OVERSIGHT</div>
       <nav className="nav-list supervisor-nav">
         {[['Team follow-ups','schedule'],['Team performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item supervisor-space-item ${active === label && isSupervisor ? 'selected' : ''}`} onClick={() => isSupervisor && navigateTo(label)} disabled={!isSupervisor} aria-label={isSupervisor ? `Open ${label.toLowerCase()}` : 'Supervisor access required'} title={isSupervisor ? `Open ${label.toLowerCase()}` : 'Supervisor access required'}><span className="nav-icon"><Icon name={icon} /></span>{label}{!isSupervisor && <span className="nav-lock">Locked</span>}</button>)}
         <button className={`nav-item supervisor-space-item ${active === 'Approvals' && isSupervisor ? 'selected' : ''}`} onClick={() => isSupervisor && navigateTo('Approvals')} disabled={!isSupervisor} aria-label={isSupervisor ? 'Open approvals' : 'Supervisor access required'} title={isSupervisor ? 'Open approvals' : 'Supervisor access required'}><span className="nav-icon"><Icon name="inbox" /></span>Approvals{!isSupervisor && <span className="nav-lock">Locked</span>}</button>
