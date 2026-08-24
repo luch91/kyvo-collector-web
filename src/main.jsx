@@ -122,6 +122,8 @@ function App() {
   const [session, setSession] = useState(() => { try { const stored = JSON.parse(localStorage.getItem('kyvo-session')); return stored?.roleCode === 'SUPERVISOR' ? { ...stored, role: 'Supervisor' } : stored } catch { return null } })
   const isSupervisor = session?.role === 'Supervisor' || session?.roleCode === 'SUPERVISOR'
   const [active, setActive] = useState(() => window.location.pathname.startsWith('/cases/') ? 'Queue' : ({ '/': 'Overview', '/queue': 'Queue', '/schedule': 'Schedule', '/demo': 'Demo', '/follow-ups': 'Follow-ups', '/notifications': 'Notifications', '/performance': 'Performance', '/team': 'Team', '/profile': 'Profile' }[window.location.pathname] || 'Overview'))
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const navigateTo = (next) => { setActive(next); setMobileSidebarOpen(false) }
   const [caseList, setCaseList] = useState(() => { try { return JSON.parse(localStorage.getItem('kyvo-cases')) || cases } catch { return cases } })
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(() => { const id = window.location.pathname.match(/^\/cases\/(.+)$/)?.[1]; return id ? cases.find((item) => item.id === id) || null : null })
@@ -261,23 +263,24 @@ function App() {
 
   if (!session) return <RoleLogin onSignIn={(nextSession) => { localStorage.setItem('kyvo-session', JSON.stringify(nextSession)); setActive('Overview'); window.history.replaceState({}, '', '/'); setSession(nextSession) }} />
 
-  return <div className={`app-shell ${isSupervisor ? 'supervisor-mode' : ''} route-${active.toLowerCase().replace(/[^a-z]+/g, '-')}`}>
+  return <div className={`app-shell ${isSupervisor ? 'supervisor-mode' : ''} route-${active.toLowerCase().replace(/[^a-z]+/g, '-')} ${mobileSidebarOpen ? 'mobile-sidebar-open' : ''}`}>
+    <button className="mobile-sidebar-backdrop" aria-label="Close navigation" onClick={() => setMobileSidebarOpen(false)} />
     <aside className="sidebar">
       <div className="brand"><div className="brand-mark">K</div><div><strong>kyvo</strong><span>COLLECTOR</span></div></div>
       <div className="workspace-label">WORKSPACE</div>
       <nav className="nav-list">
-        {[['Overview','home'],['Queue','queue'],['Schedule','schedule'],['Follow-ups','schedule'],['Notifications','notifications'],['Performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label ? 'selected' : ''}`} onClick={() => setActive(label)}><span className="nav-icon"><Icon name={icon} /></span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
+        {[['Overview','home'],['Queue','queue'],['Schedule','schedule'],['Follow-ups','schedule'],['Notifications','notifications'],['Performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label ? 'selected' : ''}`} onClick={() => navigateTo(label)}><span className="nav-icon"><Icon name={icon} /></span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
       </nav>
-      <button className={`nav-item request-nav ${active === (isSupervisor ? 'Approvals' : 'Requests') ? 'selected' : ''}`} onClick={() => setActive(isSupervisor ? 'Approvals' : 'Requests')}><span className="nav-icon"><Icon name="queue" /></span>{isSupervisor ? 'Approvals' : 'Requests'}</button>
+      <button className={`nav-item request-nav ${active === (isSupervisor ? 'Approvals' : 'Requests') ? 'selected' : ''}`} onClick={() => navigateTo(isSupervisor ? 'Approvals' : 'Requests')}><span className="nav-icon"><Icon name="queue" /></span>{isSupervisor ? 'Approvals' : 'Requests'}</button>
       <div className="workspace-label team-label">SUPERVISOR</div>
-      {isSupervisor && <button className={`nav-item ${active === 'Team' ? 'selected' : ''}`} onClick={() => setActive('Team')}><span className="nav-icon"><Icon name="team" /></span>Team</button>}
-      <div className="sidebar-bottom"><button className="user-card" onClick={() => setActive('Profile')}><div className="avatar avatar-sm">{session.initials}</div><div className="user-meta"><strong>{session.name}</strong><span>{session.role}</span></div><span className="more">•••</span></button><button className="settings-link" onClick={() => setActive('Profile')}>⚙&nbsp; Profile & settings</button><button className="settings-link" onClick={() => { localStorage.removeItem('kyvo-session'); setSession(null) }}>↪&nbsp; Sign out</button></div>
+      {isSupervisor && <button className={`nav-item ${active === 'Team' ? 'selected' : ''}`} onClick={() => navigateTo('Team')}><span className="nav-icon"><Icon name="team" /></span>Team</button>}
+      <div className="sidebar-bottom"><button className="user-card" onClick={() => navigateTo('Profile')}><div className="avatar avatar-sm">{session.initials}</div><div className="user-meta"><strong>{session.name}</strong><span>{session.role}</span></div><span className="more">•••</span></button><button className="settings-link" onClick={() => navigateTo('Profile')}>⚙&nbsp; Profile & settings</button><button className="settings-link" onClick={() => { localStorage.removeItem('kyvo-session'); setSession(null) }}>↪&nbsp; Sign out</button></div>
     </aside>
     <main className="main-content">
       {isSupervisor && active === 'Overview' && <SupervisorOverview approvals={approvals} onDecision={decideApproval} onOpenTeam={() => setActive('Team')} onOpenQueue={() => setActive('Queue')} />}
       {(active === 'Requests' || active === 'Approvals') && <ApprovalWorkspace isSupervisor={isSupervisor} approvals={approvals} collectorName={session.name} cases={caseList} onDecision={decideApproval} onSubmit={(request) => { setApprovals((items) => [{ ...request, id: `APR-${Date.now()}`, loan: 'Awaiting reference', collector: session.name, submitted: 'Just now', status: 'Pending', tone: request.type === 'Write-off' ? 'red' : request.type === 'Extension' ? 'amber' : 'blue' }, ...items]); notify('Request submitted for supervisor approval') }} />}
       {isSupervisor && <div className="role-context"><span>SUPERVISOR VIEW</span><strong>Team collections workspace</strong><small>Monitor workload, intervene on cases, and reassign work.</small></div>}
-      <header className="topbar"><div className="breadcrumb">Workspace <span>/</span> <strong>{active}</strong></div><div className="top-actions"><button className="icon-button" aria-label="Help">?</button><button className="notification-button" onClick={() => setActive('Notifications')}>♢<span className="notification-dot" /></button><div className="avatar">{session.initials}</div></div></header>
+      <header className="topbar"><div className="breadcrumb"><button className="mobile-menu-button" aria-label={mobileSidebarOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileSidebarOpen} onClick={() => setMobileSidebarOpen((open) => !open)}><span /><span /><span /></button>Workspace <span>/</span> <strong>{active}</strong></div><div className="top-actions"><button className="icon-button" aria-label="Help">?</button><button className="notification-button" onClick={() => navigateTo('Notifications')}>♢<span className="notification-dot" /></button><div className="avatar">{session.initials}</div></div></header>
       {!isSupervisor && active === 'Overview' && <><AgentOverviewMetrics caseList={caseList} /><AgentBrokenPtpMetric caseList={caseList} /></>}
       {active === 'Queue' && queueContext && <div className="queue-context-banner"><span>TEAM QUEUE</span><strong>{queueContext}</strong><button type="button" onClick={() => setQueueContext('')}>Show my queue</button></div>}
       {active === 'Queue' ? <>
