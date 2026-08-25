@@ -81,7 +81,7 @@ const supervisorApprovals = [
   { id: 'APR-1046', type: 'Extension', customer: 'Emeka Obi', loan: 'LN-2701', collector: 'Chisom Okeke', submitted: 'Jun 8, 13:10', amount: '₦128,000', reason: 'Medical emergency; requesting a 30-day extension.', tone: 'amber', age: '4h 05m' },
 ].map((item) => ({ ...item, status: 'Pending' }))
 
-function SupervisorOverview({ approvals, onDecision, onOpenTeam, onOpenQueue }) {
+function SupervisorOverview({ approvals, onOpenTeam, onOpenQueue }) {
   const [filter, setFilter] = useState('Pending')
   const visible = approvals.filter((item) => filter === 'All' || item.status === filter)
   const pending = approvals.filter((item) => item.status === 'Pending').length
