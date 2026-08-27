@@ -283,7 +283,7 @@ function App() {
       <div className="sidebar-section-label">MY WORK</div>
       <nav className="nav-list collector-nav">
         {[['Overview','home'],['Queue','queue'],['Schedule','schedule'],['Follow-ups','schedule'],['Notifications','notifications'],['Performance','performance']].map(([label, icon]) => <button key={label} className={`nav-item ${active === label && !isSupervisor ? 'selected' : ''}`} onClick={() => navigateTo(label)}><span className="nav-icon"><Icon name={icon} /></span>{label}{label === 'Notifications' && <span className="nav-count">{notifications.filter((item) => !item.read).length}</span>}</button>)}
-        <button className={`nav-item request-nav ${active === 'Requests' && !isSupervisor ? 'selected' : ''}`} onClick={() => navigateTo('Requests')}><span className="nav-icon"><Icon name="inbox" /></span>Requests</button>
+        {!isSupervisor && <button className={`nav-item request-nav ${active === 'Requests' ? 'selected' : ''}`} onClick={() => navigateTo('Requests')}><span className="nav-icon"><Icon name="inbox" /></span>Requests</button>}
       </nav>
       <div className="sidebar-section-label supervisor-section-label">TEAM OVERSIGHT</div>
       <nav className="nav-list supervisor-nav">
