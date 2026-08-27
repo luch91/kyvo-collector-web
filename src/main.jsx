@@ -294,6 +294,7 @@ function App() {
       <div className="sidebar-bottom"><button className="user-card" onClick={() => navigateTo('Profile')}><div className="avatar avatar-sm">{session.initials}</div><div className="user-meta"><strong>{session.name}</strong><span>{session.role}</span></div><span className="more">•••</span></button><button className="settings-link" onClick={() => navigateTo('Profile')}>⚙&nbsp; Profile & settings</button><button className="settings-link" onClick={() => { localStorage.removeItem('kyvo-session'); setSession(null) }}>↪&nbsp; Sign out</button></div>
     </aside>
     <main className="main-content">
+      {isSupervisor && active === 'Team' && <button className="team-assign-quick button button-primary" onClick={() => setReassignOpen(true)}><span>＋</span> Assign / reassign loan</button>}
       {active === 'Team follow-ups' && <SupervisorFollowups caseList={caseList} onOpenCase={openCase} />}
       {active === 'Team performance' && <SupervisorPerformance caseList={caseList} />}
       {isSupervisor && active === 'Overview' && <SupervisorOverview approvals={approvals} onDecision={decideApproval} onOpenTeam={() => setActive('Team')} onOpenQueue={() => setActive('Queue')} />}
